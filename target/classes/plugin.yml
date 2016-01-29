@@ -1,0 +1,9 @@
+name: NickQuest
+main: Nick3306.github.io.NickQuest.Main
+version: .01
+commands:
+   Quest:
+      description: Quests
+      usage:
+      permission: 
+      permission-message: You do not have permission to use this command!
