@@ -49,6 +49,18 @@ public class Quest2 implements Quest
 	@Override
 	public String questInfo() 
 	{
+		if(part == 0)
+		{
+			return "head to the windmill outside of the castle to talk to tim";
+		}
+		if(part == 1)
+		{
+			return "search the area for clues to where tim went"; 
+		}
+		if(part ==2)
+		{
+			return "Rescue time from the evildoers";
+		}
 		return " ";
 	}
 

@@ -17,13 +17,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import Quest1.Quest1;
+import Quest2.Quest2;
 
 public class QuestCommands implements CommandExecutor
 {
 	private Main plugin;
+	private Utilities util;
 	public QuestCommands(Main plugin)
 	 {
 	   this.plugin = plugin;
+	   this.util = this.plugin.util;
 	 }
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String lable, String[] args) 
@@ -62,35 +65,72 @@ public class QuestCommands implements CommandExecutor
 			}
 			else if(args[0].equalsIgnoreCase("getQuest"))
 			{
-				for(int i = 0; i < plugin.playerQuests.get(player).size(); i++)
+				
+				if(args[1].equalsIgnoreCase("1"))
 				{
-					if(plugin.playerQuests.get(player).get(i).getQuestNum() == 1)
+					if(!util.hasQuest(player, 1))
 					{
 						player.sendMessage(ChatColor.GREEN + "You already have this quest!");
 						return false;
 					}
+				
+					player.sendMessage(data.getString("CompletedQuests"));
+					List<String> list = data.getStringList("CompletedQuests");		
+					if(!list.contains("Quest1"))
+					{								
+						Quest1 currentQuest = new Quest1(1, player, this.plugin);
+						ArrayList<Quest> quests = plugin.playerQuests.get(player);
+						quests.add(currentQuest);
+						this.plugin.playerQuests.put(player, quests);
+						player.sendMessage(ChatColor.GREEN + "Quest 1 added!");
+						data.set("CurrentQuests" + ".Quest1", 1);
+						player.sendMessage(Integer.toString(data.getInt("CurrentQuests" + ".Quest1")));
+						try {
+							data.save(playerConfig);
+						} catch (IOException e) 
+						{
+
+							e.printStackTrace();
+						}				
+						return true;
+					}
+						player.sendMessage(ChatColor.GREEN + "You have already completed this quest!");
+						return false;	
+					}
+				if(args[1].equalsIgnoreCase("2"))
+				{
+					if(args[1].equalsIgnoreCase("2"))
+					{
+						if(!util.hasQuest(player, 2))
+						{
+							player.sendMessage(ChatColor.GREEN + "You already have this quest!");
+							return false;
+						}
+					
+						player.sendMessage(data.getString("CompletedQuests"));
+						List<String> list = data.getStringList("CompletedQuests");		
+						if(!list.contains("Quest2"))
+						{								
+							Quest2 currentQuest = new Quest2(1, player, this.plugin);
+							ArrayList<Quest> quests = plugin.playerQuests.get(player);
+							quests.add(currentQuest);
+							this.plugin.playerQuests.put(player, quests);
+							player.sendMessage(ChatColor.GREEN + "Quest 2 added!");
+							data.set("CurrentQuests" + ".Quest2", 0);
+							player.sendMessage(Integer.toString(data.getInt("CurrentQuests" + ".Quest2")));
+							try 
+							{
+								data.save(playerConfig);
+							} catch (IOException e) 
+							{
+								e.printStackTrace();
+							}				
+							return true;
+						}
+							player.sendMessage(ChatColor.GREEN + "You have already completed this quest!");
+							return false;	
+						}
 				}
-				player.sendMessage(data.getString("CompletedQuests"));
-				List<String> list = data.getStringList("CompletedQuests");		
-				if(!list.contains("Quest1"))
-				{								
-					Quest1 currentQuest = new Quest1(1, player, this.plugin);
-					ArrayList<Quest> quests = plugin.playerQuests.get(player);
-					quests.add(currentQuest);
-					this.plugin.playerQuests.put(player, quests);
-					player.sendMessage(ChatColor.GREEN + "Quest 1 added!");
-					data.set("CurrentQuests" + ".Quest1", 1);
-					player.sendMessage(Integer.toString(data.getInt("CurrentQuests" + ".Quest1")));
-					try {
-						data.save(playerConfig);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}				
-					return true;
-				}
-					player.sendMessage(ChatColor.GREEN + "You have already completed this quest!");
-					return false;			
 			}		
 			else if(args[0].equalsIgnoreCase("turnin"))
 			{

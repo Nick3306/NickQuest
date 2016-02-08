@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 public class Utilities
 {
+	public String testString = "test";
 	private Main plugin;
 	public Utilities(Main plugin)
 	 {

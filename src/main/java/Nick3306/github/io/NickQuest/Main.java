@@ -21,10 +21,12 @@ public class Main extends JavaPlugin
 		PluginManager pm = getServer().getPluginManager();
 		this.getConfig().options().copyDefaults(true);
 		saveDefaultConfig();
+		util = new Utilities(this);
 		pm.registerEvents(new Quest1Listener(this), this);
 		pm.registerEvents(new JoinListener(this), this);
 		pm.registerEvents(new Quest2Listener(this), this);
 		getCommand("Quest").setExecutor(new QuestCommands(this));
+		
 	 }
 	 public void onDisable()
 	 {
