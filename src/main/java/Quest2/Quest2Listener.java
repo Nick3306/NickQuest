@@ -27,16 +27,14 @@ public class Quest2Listener implements Listener
 	public void onRegionEnter(RegionEnterEvent e)
 	{
 		Player player = e.getPlayer();
-
-		if(!util.hasQuest(player, 2))
+		if(util.hasQuest(player, 2))
 		{
-			player.sendMessage("You do not have quest 2!");
+			if(e.getRegion().getId().equalsIgnoreCase("Q2-1"))
+			{
+				player.sendMessage("In region");
+				((Quest2) util.getQuest(player, 2)).setPart(1);
+			}	
 		}
-		
-		if(e.getRegion().getId().equalsIgnoreCase("test"))
-		{
-			player.sendMessage("In region");
-		}		
 	}
 	@EventHandler
 	public void onRegionLeave(RegionLeaveEvent e)
@@ -50,15 +48,16 @@ public class Quest2Listener implements Listener
 	@EventHandler
 	public void onChestOpen(PlayerInteractEvent e)
 	{
+		Player player = e.getPlayer();
 		if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 		{
 			if(e.getClickedBlock().getType().equals(Material.CHEST))
 			{
-				
+				if(util.hasQuest(player, 2))
+				{
+					((Quest2) util.getQuest(player, 2)).setPart(2);
+				}
 			}
-		}
-		
-			
-		
+		}							
 	}
 }

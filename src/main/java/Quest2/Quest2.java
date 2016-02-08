@@ -81,5 +81,8 @@ public class Quest2 implements Quest
 	{
 		return questNum;
 	}
-
+	void setPart(int a)
+	{
+		part = a;
+	}
 }
