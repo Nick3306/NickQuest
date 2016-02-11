@@ -68,7 +68,7 @@ public class QuestCommands implements CommandExecutor
 				
 				if(args[1].equalsIgnoreCase("1"))
 				{
-					if(!util.hasQuest(player, 1))
+					if(util.hasQuest(player, 1))
 					{
 						player.sendMessage(ChatColor.GREEN + "You already have this quest!");
 						return false;
@@ -101,7 +101,7 @@ public class QuestCommands implements CommandExecutor
 				{
 					if(args[1].equalsIgnoreCase("2"))
 					{
-						if(!util.hasQuest(player, 2))
+						if(util.hasQuest(player, 2))
 						{
 							player.sendMessage(ChatColor.GREEN + "You already have this quest!");
 							return false;
@@ -130,6 +130,10 @@ public class QuestCommands implements CommandExecutor
 							player.sendMessage(ChatColor.GREEN + "You have already completed this quest!");
 							return false;	
 						}
+				}
+				else
+				{
+					player.sendMessage("That is not a quest, try 1 or 2!");
 				}
 			}		
 			else if(args[0].equalsIgnoreCase("turnin"))

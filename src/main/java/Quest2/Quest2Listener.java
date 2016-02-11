@@ -29,10 +29,11 @@ public class Quest2Listener implements Listener
 		Player player = e.getPlayer();
 		if(util.hasQuest(player, 2))
 		{
-			if(e.getRegion().getId().equalsIgnoreCase("Q2-1"))
+			if(e.getRegion().getId().equalsIgnoreCase("quest2-1"))
 			{
 				player.sendMessage("In region");
 				((Quest2) util.getQuest(player, 2)).setPart(1);
+				((Quest2) util.getQuest(player, 2)).updateConfig(1);
 			}	
 		}
 	}
@@ -40,9 +41,12 @@ public class Quest2Listener implements Listener
 	public void onRegionLeave(RegionLeaveEvent e)
 	{
 		Player player = e.getPlayer();
-		if(e.getRegion().getId().equalsIgnoreCase("test"))
+		if(util.hasQuest(player, 2))
 		{
-			player.sendMessage("left region");
+			if(e.getRegion().getId().equalsIgnoreCase("quest2-1"))
+			{
+				player.sendMessage("You have left the quest area!");
+			}	
 		}		
 	}
 	@EventHandler
@@ -55,7 +59,11 @@ public class Quest2Listener implements Listener
 			{
 				if(util.hasQuest(player, 2))
 				{
-					((Quest2) util.getQuest(player, 2)).setPart(2);
+					if(util.getQuest(player, 2).getPart() == 1)
+					{
+						((Quest2) util.getQuest(player, 2)).setPart(2);
+						((Quest2) util.getQuest(player, 2)).updateConfig(2);
+					}
 				}
 			}
 		}							

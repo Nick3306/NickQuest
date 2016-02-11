@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import Quest1.Quest1;
+import Quest2.Quest2;
 //This listener gets the player that joins and grabs what quest they are on from the config.
 public class JoinListener implements Listener
 {
@@ -36,9 +37,11 @@ public class JoinListener implements Listener
 		UUID uuid = player.getUniqueId();
 		File playerConfig = new File(plugin.getDataFolder()+"/user_data/" + uuid+".yml");
 		FileConfiguration data = YamlConfiguration.loadConfiguration(playerConfig);
+		
 		if(playerConfig.exists())
 		{
 			data.load(playerConfig);
+			Bukkit.getLogger().info("Config Exists!");
 		}
 		else
 		{
@@ -47,9 +50,14 @@ public class JoinListener implements Listener
 			data.set("CurrentQuests", "");
 			data.save(playerConfig);
 		}
-		if(this.plugin.getConfig().getConfigurationSection(uuid.toString() + ".CurrentQuests") != null)
+		if(data.getStringList(uuid.toString() + ".CurrentQuests").isEmpty())
 		{
-			Set<String> keys = this.plugin.getConfig().getConfigurationSection(uuid.toString() + ".CurrentQuests").getKeys(true);	
+			Bukkit.getLogger().info("Current quests is null");
+		}
+		if(!data.getStringList(uuid.toString() + ".CurrentQuests").isEmpty())
+		{
+			Bukkit.getLogger().info("if Statement");
+			Set<String> keys = data.getConfigurationSection(uuid.toString() + ".CurrentQuests").getKeys(true);	
 			String[] keysArray = keys.toArray(new String[0]);
 		
 			if(keysArray.length == 0)
@@ -63,7 +71,8 @@ public class JoinListener implements Listener
 			//player.sendMessage("First item in list is " + list.get(0));
 			for(int i = 0 ; i < keysArray.length; i++)
 			{
-				int part = plugin.getConfig().getInt(uuid.toString() + ".CurrentQuests." + keysArray[i]);
+				Bukkit.getLogger().info("In for!");
+				int part = data.getInt(uuid.toString() + ".CurrentQuests." + keysArray[i]);
 				addQuest(keysArray[i], part, player, quests);
 			}
 		}
@@ -76,6 +85,12 @@ public class JoinListener implements Listener
 		{
 			Bukkit.getLogger().info("in quest1");
 			Quest1 quest = new Quest1(part, player, this.plugin);
+			quests.add(quest);
+		}
+		if(input.equalsIgnoreCase("Quest2"));
+		{
+			Bukkit.getLogger().info("in quest2");
+			Quest2 quest = new Quest2(part, player, this.plugin);
 			quests.add(quest);
 		}
 	}

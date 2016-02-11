@@ -14,7 +14,7 @@ public class Utilities
 	{
 		for (int i = 0; i < plugin.playerQuests.get(player).size(); i++)
 		{
-			if(plugin.playerQuests.get(player).get(i).questNum == questNum)
+			if(plugin.playerQuests.get(player).get(i).getQuestNum()== questNum)
 			{
 				return true;
 			}
@@ -25,7 +25,7 @@ public class Utilities
 	{
 		for (int i = 0; i < plugin.playerQuests.get(player).size(); i++)
 		{
-			if(plugin.playerQuests.get(player).get(i).questNum == questNum)
+			if(plugin.playerQuests.get(player).get(i).getQuestNum() == questNum)
 			{
 				return plugin.playerQuests.get(player).get(i);
 			}

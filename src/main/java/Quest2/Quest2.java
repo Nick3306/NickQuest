@@ -59,7 +59,7 @@ public class Quest2 implements Quest
 		}
 		if(part ==2)
 		{
-			return "Rescue time from the evildoers";
+			return "You have learned that tim was captured! Rescue time from the evildoers";
 		}
 		return " ";
 	}
@@ -81,8 +81,12 @@ public class Quest2 implements Quest
 	{
 		return questNum;
 	}
-	void setPart(int a)
+	public void setPart(int a)
 	{
 		part = a;
+	}
+	public void updateConfig(int a)
+	{
+		data.set("CurrentQuests" +  ".Quest2", a);
 	}
 }

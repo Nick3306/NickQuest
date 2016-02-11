@@ -23,6 +23,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Nick/Desktop/WGRegionEvents.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Nick/Desktop/worldguard-6.0.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nick/Desktop/worldguard.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
