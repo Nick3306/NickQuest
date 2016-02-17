@@ -1,5 +1,7 @@
 package Quest2;
 
+import java.io.IOException;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,14 +26,13 @@ public class Quest2Listener implements Listener
 	   this.util = this.plugin.util;
 	 }
 	@EventHandler
-	public void onRegionEnter(RegionEnterEvent e)
+	public void onRegionEnter(RegionEnterEvent e) throws IOException
 	{
 		Player player = e.getPlayer();
 		if(util.hasQuest(player, 2))
 		{
 			if(e.getRegion().getId().equalsIgnoreCase("quest2-1"))
 			{
-				player.sendMessage("In region");
 				((Quest2) util.getQuest(player, 2)).setPart(1);
 				((Quest2) util.getQuest(player, 2)).updateConfig(1);
 			}	
@@ -50,7 +51,7 @@ public class Quest2Listener implements Listener
 		}		
 	}
 	@EventHandler
-	public void onChestOpen(PlayerInteractEvent e)
+	public void onChestOpen(PlayerInteractEvent e) throws IOException
 	{
 		Player player = e.getPlayer();
 		if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK))

@@ -1,7 +1,9 @@
 package Quest2;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -42,9 +44,7 @@ public class Quest2 implements Quest
 			part = 2;
 		}
 		playerConfig = new File(plugin.getDataFolder()+"/user_data/" + player.getUniqueId()+".yml");
-		data = YamlConfiguration.loadConfiguration(playerConfig);
-		Plugin worldguard = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
-		
+		data = YamlConfiguration.loadConfiguration(playerConfig);		
 	}
 	@Override
 	public String questInfo() 
@@ -85,8 +85,9 @@ public class Quest2 implements Quest
 	{
 		part = a;
 	}
-	public void updateConfig(int a)
+	public void updateConfig(int a) throws IOException
 	{
 		data.set("CurrentQuests" +  ".Quest2", a);
+		data.save(playerConfig);
 	}
 }
