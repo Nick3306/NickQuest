@@ -15,13 +15,17 @@ import org.bukkit.inventory.ItemStack;
 
 import Nick3306.github.io.NickQuest.Main;
 import Nick3306.github.io.NickQuest.Quest;
+import Nick3306.github.io.NickQuest.QuestPlayer;
+import Nick3306.github.io.NickQuest.Utilities;
 
 public class Quest1Listener implements Listener
 {
 	private Main plugin;
+	private Utilities util;
 	public Quest1Listener(Main plugin)
 	 {
 	   this.plugin = plugin;
+	   this.util = this.plugin.util;
 	 }
 	@EventHandler
 	public void EntityDeath(EntityDeathEvent event) throws IOException
@@ -30,20 +34,19 @@ public class Quest1Listener implements Listener
 		if(event.getEntity().getKiller() != null)
 		{
 			Player player = event.getEntity().getKiller();
-			for(int i = 0; i < plugin.playerQuests.get(player).size(); i++)// If player is on quest 1
-			{	
-				if(((Quest) plugin.playerQuests.get(player).get(i)).getQuestNum() == 1)
+			QuestPlayer questPlayer = util.getQuestPlayer(player);
+			if(util.hasQuest(player, 1))// If player is on quest 1
+			{
+				Quest1 currentQuest = (Quest1) util.getQuest(player, 1);		//if player is on part 1 of quest 1	
+				if (currentQuest.getPart() == 1) 							
 				{
-					if (((Quest1) plugin.playerQuests.get(player).get(i)).part == 1) 							//if player is on part 1 of quest 1	
-					{
-						if(event.getEntity().getType() == EntityType.SKELETON)
-						{	
-							if(event.getEntity().getKiller() == player)
-							{								
-								((Quest1) plugin.playerQuests.get(player).get(i)).killsInc();											//Cast default object as quest1
-								player.sendMessage(Integer.toString(((Quest1) plugin.playerQuests.get(player).get(i)).skelKills));
-							}
-						}
+					if(event.getEntity().getType() == EntityType.SKELETON)
+					{	
+						if(event.getEntity().getKiller() == player)
+						{								
+							currentQuest.killsInc();											
+							player.sendMessage(Integer.toString(currentQuest.skelKills));
+						}						
 					}
 				}			
 			}

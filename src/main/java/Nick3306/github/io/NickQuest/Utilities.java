@@ -12,9 +12,10 @@ public class Utilities
 	 }
 	public boolean hasQuest(Player player, int questNum)
 	{
-		for (int i = 0; i < plugin.playerQuests.get(player).size(); i++)
+		QuestPlayer questPlayer = getQuestPlayer(player);
+		for(int i = 0; i< questPlayer.currentQuests.size(); i++)
 		{
-			if(plugin.playerQuests.get(player).get(i).getQuestNum()== questNum)
+			if(questPlayer.currentQuests.get(i).getQuestNum() == questNum)
 			{
 				return true;
 			}
@@ -23,14 +24,26 @@ public class Utilities
 	}
 	public Quest getQuest(Player player, int questNum)
 	{
-		for (int i = 0; i < plugin.playerQuests.get(player).size(); i++)
+		QuestPlayer questPlayer = getQuestPlayer(player);
+		for(int i = 0; i< questPlayer.currentQuests.size(); i++)
 		{
-			if(plugin.playerQuests.get(player).get(i).getQuestNum() == questNum)
+			if(questPlayer.currentQuests.get(i).getQuestNum() == questNum)
 			{
-				return plugin.playerQuests.get(player).get(i);
+				return questPlayer.currentQuests.get(i);
 			}
 		}
 		return null;
 		
+	}
+	public QuestPlayer getQuestPlayer(Player player)
+	{
+		for(int i = 0; i < plugin.questPlayers.size(); i++)
+		{
+			if(plugin.questPlayers.get(i).getPlayer() == player)
+			{
+				return plugin.questPlayers.get(i);
+			}
+		}
+		return null;
 	}
 }

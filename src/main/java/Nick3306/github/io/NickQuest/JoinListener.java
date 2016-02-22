@@ -59,22 +59,11 @@ public class JoinListener implements Listener
 		}
 		if(data.getConfigurationSection("CurrentQuests") != null)
 		{
-			Bukkit.getLogger().info("if Statement");
 			Set<String> keys = data.getConfigurationSection("CurrentQuests").getKeys(true);	
 			String[] keysArray = keys.toArray(new String[0]);
 		
-			if(keysArray.length == 0)
-			{
-				Bukkit.getLogger().info("array IS EMPTY!");
-			}
-			else
-			{
-				Bukkit.getLogger().info("Size is " + keysArray.length);
-			}
-			//player.sendMessage("First item in list is " + list.get(0));
 			for(int i = 0 ; i < keysArray.length; i++)
 			{
-				Bukkit.getLogger().info("In for!");
 				int part = data.getInt("CurrentQuests." + keysArray[i]);
 				addQuest(keysArray[i], part, player, quests);
 			}
@@ -83,16 +72,13 @@ public class JoinListener implements Listener
 	}
 	public void addQuest(String input, int part, Player player, ArrayList<Quest> quests)
 	{
-		Bukkit.getLogger().info("in addquest");
 		if(input.equalsIgnoreCase("Quest1"))
 		{
-			Bukkit.getLogger().info("in quest1");
 			Quest1 quest = new Quest1(part, player, this.plugin);
 			quests.add(quest);
 		}
 		if(input.equalsIgnoreCase("Quest2"))
 		{
-			Bukkit.getLogger().info("in quest2");
 			Quest2 quest = new Quest2(part, player, this.plugin);
 			quests.add(quest);
 		}

@@ -14,7 +14,7 @@ public class Main extends JavaPlugin
 {
 	// The value of this hashmap will be the unique quests a player is on. Setting type as object allows them all to be stored in the same map. 
 	//They will be casted when needed
-	public HashMap<Player, ArrayList<Quest>> playerQuests = new HashMap<Player, ArrayList<Quest>>();
+	ArrayList<QuestPlayer> questPlayers = new ArrayList<QuestPlayer>();
 	public Utilities util;
 	 public void onEnable()
 	 {

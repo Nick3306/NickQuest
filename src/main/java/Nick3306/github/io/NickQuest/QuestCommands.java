@@ -43,23 +43,24 @@ public class QuestCommands implements CommandExecutor
 				return true;
 			}
 			Player player = (Player) sender;
+			QuestPlayer questPlayer = util.getQuestPlayer(player);
 			File playerConfig = new File(plugin.getDataFolder()+"/user_data/" + player.getUniqueId()+".yml");
 			FileConfiguration data = YamlConfiguration.loadConfiguration(playerConfig);
 			if(args[0].equalsIgnoreCase("info"))
 			{
 				if(args.length < 2)
 				{
-					for (int i = 0; i < plugin.playerQuests.get(player).size(); i++)
+					for (int i = 0; i < questPlayer.currentQuests.size(); i++)
 					{
 						player.sendMessage(ChatColor.RED + "Current Quests");
-						player.sendMessage(ChatColor.GREEN + Integer.toString(i+1) + " " + plugin.playerQuests.get(player).get(i).getName());
+						player.sendMessage(ChatColor.GREEN + Integer.toString(i+1) + " " + questPlayer.currentQuests.get(i).getName());
 					}
 					return true;
 				}
 				if(args.length == 2)
 				{
 					int index = Integer.parseInt(args[1]) - 1;
-					player.sendMessage(ChatColor.GREEN + plugin.playerQuests.get(player).get(index).questInfo());
+					player.sendMessage(ChatColor.GREEN + questPlayer.currentQuests.get(index).questInfo());
 					return true;
 				}
 			}
@@ -79,9 +80,7 @@ public class QuestCommands implements CommandExecutor
 					if(!list.contains("Quest1"))
 					{								
 						Quest1 currentQuest = new Quest1(1, player, this.plugin);
-						ArrayList<Quest> quests = plugin.playerQuests.get(player);
-						quests.add(currentQuest);
-						this.plugin.playerQuests.put(player, quests);
+						questPlayer.currentQuests.add(currentQuest);
 						player.sendMessage(ChatColor.GREEN + "Quest 1 added!");
 						data.set("CurrentQuests" + ".Quest1", 1);
 						player.sendMessage(Integer.toString(data.getInt("CurrentQuests" + ".Quest1")));
@@ -112,9 +111,7 @@ public class QuestCommands implements CommandExecutor
 						if(!list.contains("Quest2"))
 						{								
 							Quest2 currentQuest = new Quest2(1, player, this.plugin);
-							ArrayList<Quest> quests = plugin.playerQuests.get(player);
-							quests.add(currentQuest);
-							this.plugin.playerQuests.put(player, quests);
+							questPlayer.currentQuests.add(currentQuest);
 							player.sendMessage(ChatColor.GREEN + "Quest 2 added!");
 							data.set("CurrentQuests" + ".Quest2", 0);
 							player.sendMessage(Integer.toString(data.getInt("CurrentQuests" + ".Quest2")));
@@ -138,16 +135,16 @@ public class QuestCommands implements CommandExecutor
 			}		
 			else if(args[0].equalsIgnoreCase("turnin"))
 			{
-				for(int i = 0; i < plugin.playerQuests.get(player).size(); i++)
+				for(int i = 0; i < questPlayer.currentQuests.size(); i++)
 				{
-					if(plugin.playerQuests.get(player).get(i).getQuestNum() == 1)
+					if(questPlayer.currentQuests.get(i).getQuestNum() == 1)
 					{
-						if(plugin.playerQuests.get(player).get(i).getPart() == 2)
+						if(questPlayer.currentQuests.get(i).getPart() == 2)
 						{
 							player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.BONE, 10)});
 							player.updateInventory();
 							player.sendMessage(ChatColor.GREEN + "Quest Completed! 500 XP gained!");
-							plugin.playerQuests.get(player).remove(i);
+							questPlayer.currentQuests.remove(i);
 							player.giveExp(500);
 							List<String> list = data.getStringList("CompletedQuests");
 							list.add("Quest1");
