@@ -1,6 +1,7 @@
 package Nick3306.github.io.NickQuest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
@@ -9,6 +10,7 @@ public class QuestPlayer
 	Player player;
 	ArrayList<Quest> currentQuests = new ArrayList<Quest>();
 	ArrayList<Quest> completedQuests = new ArrayList<Quest>();
+	HashMap<String, Integer> skills = new HashMap<String, Integer>();
 	int level;
 	double exp;
 	QuestPlayer(Player player, int level, double exp)
@@ -36,5 +38,9 @@ public class QuestPlayer
 	public void setExp(double exp) 
 	{
 		this.exp = exp;
+	}
+	public int getSkillLevel(String skill)
+	{
+		return skills.get(skill);
 	}
 }
