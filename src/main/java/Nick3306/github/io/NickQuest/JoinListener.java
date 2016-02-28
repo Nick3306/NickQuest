@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.sql.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -31,56 +32,40 @@ public class JoinListener implements Listener
 	 {
 	   this.plugin = plugin;
 	 }
-
 	@EventHandler
-	public void playerJoin(PlayerLoginEvent event) throws FileNotFoundException, IOException, InvalidConfigurationException
+	public void playerJoin(PlayerLoginEvent event)
 	{
-		ArrayList<Quest> quests = new ArrayList<Quest>();
 		Player player = event.getPlayer();
-		UUID uuid = player.getUniqueId();
-		playerConfig = new File(plugin.getDataFolder()+"/user_data/" + uuid+".yml");
-		data = YamlConfiguration.loadConfiguration(playerConfig);
-		
-		if(playerConfig.exists())
+		String uuid = player.getUniqueId().toString();
+		try 
 		{
-			data.load(playerConfig);
-			Bukkit.getLogger().info("Config Exists!");
-		}
-		else
-		{
-			data.save(playerConfig);
-			data.set("CompletedQuests", "");
-			data.set("CurrentQuests", "");
-			data.save(playerConfig);
-		}
-		if(data.getConfigurationSection("CurrentQuests") == null)
-		{
-			Bukkit.getLogger().info("Current quests is null");
-		}
-		if(data.getConfigurationSection("CurrentQuests") != null)
-		{
-			Set<String> keys = data.getConfigurationSection("CurrentQuests").getKeys(true);	
-			String[] keysArray = keys.toArray(new String[0]);
-		
-			for(int i = 0 ; i < keysArray.length; i++)
+			Connection myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
+
+			Bukkit.getLogger().info("Sucessfully connected");
+			PreparedStatement myStatement = myConn.prepareStatement("SELECT * FROM player_quests WHERE uuid =?;");
+			myStatement.setString(1, uuid);			
+			ResultSet myRS = myStatement.executeQuery();
+			if(myRS.next() == false)
 			{
-				int part = data.getInt("CurrentQuests." + keysArray[i]);
-				addQuest(keysArray[i], part, player, quests);
+				Bukkit.getLogger().info("Player does not exist in DB");
+				PreparedStatement preparedStmt = myConn.prepareStatement("INSERT INTO player_quests " + "VALUES (?,0,0,0,0,0,0,0,0,0,0)");
+				preparedStmt.setString(1, uuid);
+				preparedStmt.execute();
+				Bukkit.getLogger().info("Player added to DB!");
+				myConn.close();
 			}
+			else
+			{
+				Bukkit.getLogger().info("Player is in the DB!");
+			}
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
 		}
-		plugin.playerQuests.put(player, quests);
 	}
 	public void addQuest(String input, int part, Player player, ArrayList<Quest> quests)
 	{
-		if(input.equalsIgnoreCase("Quest1"))
-		{
-			Quest1 quest = new Quest1(part, player, this.plugin);
-			quests.add(quest);
-		}
-		if(input.equalsIgnoreCase("Quest2"))
-		{
-			Quest2 quest = new Quest2(part, player, this.plugin);
-			quests.add(quest);
-		}
+		
 	}
 }
