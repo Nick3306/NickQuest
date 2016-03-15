@@ -83,6 +83,31 @@ public class JoinListener implements Listener
 					}
 				}
 			}
+			
+			//get skills
+			myConn.prepareStatement("SELECT * FROM player_quests WHERE uuid =?;");
+			myStatement.setString(1, uuid);			
+			rs = myStatement.executeQuery();
+			if(rs.next() == false)
+			{
+				Bukkit.getLogger().info("Player does not exist in DB nick_skills!");
+				PreparedStatement preparedStmt = myConn.prepareStatement("INSERT INTO nick_skills " + "VALUES (?,0,0,0,0");
+				preparedStmt.setString(1, uuid);
+				preparedStmt.execute();
+				Bukkit.getLogger().info("Player added to DB!");
+			}
+			else
+			{
+				QuestPlayer joiningPlayer = util.getQuestPlayer(player);
+				joiningPlayer.skillsExp.put("mining", rs.getDouble("mining"));
+				joiningPlayer.skillsExp.put("archery", rs.getDouble("archery"));
+				joiningPlayer.skillsExp.put("sword", rs.getDouble("sword"));
+				joiningPlayer.skillsExp.put("magic", rs.getDouble("magic"));
+				joiningPlayer.skills.put("mining", Math.floor(rs.getDouble("mining")%1.5));
+				joiningPlayer.skills.put("archery", Math.floor(rs.getDouble("archery")%1.5));
+				joiningPlayer.skills.put("sword", Math.floor(rs.getDouble("sword")%1.5));
+				joiningPlayer.skills.put("magic", Math.floor(rs.getDouble("magic")%1.5));
+			}
 			myConn.close();
 		} 
 		catch (SQLException e) 

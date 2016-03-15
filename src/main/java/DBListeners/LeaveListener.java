@@ -3,6 +3,7 @@ package DBListeners;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,6 +71,21 @@ public class LeaveListener implements Listener
 				uuidCounter = i;
 			}
 			myStatement.setString(uuidCounter+2, uuid);
+			myStatement.execute();
+			
+			//get and send stats
+			myStatement = myConn.prepareStatement("UPDATE nick_stats SET level=?,exp=? WHERE uuid=?");
+			myStatement.setString(1, Integer.toString(questPlayer.getLevel()));
+			myStatement.setString(2, Double.toString(questPlayer.getExp()));
+			myStatement.setString(3, uuid);
+			myStatement.execute();
+			
+			//get and send skills
+			myStatement = myConn.prepareStatement("UPDATE nick_skills SET mining=?,archery=?,sword=?,magic=? WHERE uuid=?;");
+			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("mining")));
+			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("archery")));
+			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("sword")));
+			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("magic")));
 			myStatement.execute();
 		} 
 		catch (SQLException e) 
