@@ -9,12 +9,12 @@ import org.bukkit.entity.Player;
 public class QuestPlayer 
 {
 	private Player player;
-	ArrayList<Quest> currentQuests = new ArrayList<Quest>();
-	ArrayList<Quest> completedQuests = new ArrayList<Quest>();
+	public ArrayList<Quest> currentQuests = new ArrayList<Quest>();
+	public ArrayList<Quest> completedQuests = new ArrayList<Quest>();
 	HashMap<String, Double> skills = new HashMap<String, Double>();
 	private int level;
 	private double exp;
-	QuestPlayer(Player player, int level, double exp)
+	public QuestPlayer(Player player, int level, double exp)
 	{
 		this.player = player;
 		this.level = level;

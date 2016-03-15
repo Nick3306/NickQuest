@@ -1,25 +1,16 @@
-package Nick3306.github.io.NickQuest;
+package DBListeners;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import java.sql.*;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
+import Nick3306.github.io.NickQuest.Main;
+import Nick3306.github.io.NickQuest.QuestPlayer;
+import Nick3306.github.io.NickQuest.Utilities;
 import Quest1.Quest1;
 import Quest2.Quest2;
 //This listener gets the player that joins and grabs what quest they are on from the config.
@@ -42,7 +33,7 @@ public class JoinListener implements Listener
 		try 
 		{
 			Connection myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
-			Bukkit.getLogger().info("Sucessfully connected");
+			Bukkit.getLogger().info("Sucessfully connected on login");
 			
 			//get stats
 			PreparedStatement myStatement = myConn.prepareStatement("SELECT * FROM nick_stats WHERE uuid =?;");
@@ -54,7 +45,9 @@ public class JoinListener implements Listener
 				PreparedStatement preparedStmt = myConn.prepareStatement("INSERT INTO nick_stats " + "VALUES (?,1,0)");
 				preparedStmt.setString(1, uuid);
 				preparedStmt.execute();
-				Bukkit.getLogger().info("Player added to DB nick_stats!");				
+				Bukkit.getLogger().info("Player added to DB nick_stats!");	
+				QuestPlayer joiningPlayer = new QuestPlayer(player, 1, 0);
+				plugin.questPlayers.add(joiningPlayer);
 			}
 			else
 			{
@@ -75,21 +68,22 @@ public class JoinListener implements Listener
 				preparedStmt.setString(1, uuid);
 				preparedStmt.execute();
 				Bukkit.getLogger().info("Player added to DB!");
-				myConn.close();
 			}
 			else
 			{
 				Bukkit.getLogger().info("Player is in the DB!");
-				for(int i = 1; i < 11 ; i++)
+				for(int i = 2; i < 11 ; i++)
 				{
-					int questNum = i;
+					int questNum = i-1;
 					int part = rs.getInt(i);
-					if(part != -1)
+					Bukkit.getLogger().info("part is: " + Integer.toString(part));
+					if(part != 0)
 					{
 						addQuest(questNum, part, player);
 					}
 				}
 			}
+			myConn.close();
 		} 
 		catch (SQLException e) 
 		{
@@ -106,15 +100,26 @@ public class JoinListener implements Listener
 				Quest1 newQuest = new Quest1(part, player, plugin);
 				joiningPlayer.completedQuests.add(newQuest);
 			}
-			else if (questNum == 1)
+			else if(part !=0)
 			{
 				Quest1 newQuest = new Quest1(part, player, plugin);
 				joiningPlayer.currentQuests.add(newQuest);
+				Bukkit.getLogger().info("quest 1 added");
+				
 			}
-			else if (questNum == 2)
+		}
+		else if (questNum == 2)
+		{
+			if(part == 999)
+			{
+				Quest2 newQuest = new Quest2(part, player, plugin);
+				joiningPlayer.completedQuests.add(newQuest);
+			}
+			else if(part !=0)
 			{
 				Quest2 newQuest = new Quest2(part, player, plugin);
 				joiningPlayer.currentQuests.add(newQuest);
+				Bukkit.getLogger().info("quest 2 added");
 			}
 		}
 	}

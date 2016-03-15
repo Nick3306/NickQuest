@@ -33,8 +33,7 @@ public class Quest2Listener implements Listener
 		{
 			if(e.getRegion().getId().equalsIgnoreCase("quest2-1"))
 			{
-				((Quest2) util.getQuest(player, 2)).setPart(1);
-				((Quest2) util.getQuest(player, 2)).updateConfig(1);
+				((Quest2) util.getQuest(player, 2)).setPart(2);
 			}	
 		}
 	}
@@ -60,10 +59,9 @@ public class Quest2Listener implements Listener
 			{
 				if(util.hasQuest(player, 2))
 				{
-					if(util.getQuest(player, 2).getPart() == 1)
+					if(util.getQuest(player, 2).getPart() == 2)
 					{
-						((Quest2) util.getQuest(player, 2)).setPart(2);
-						((Quest2) util.getQuest(player, 2)).updateConfig(2);
+						((Quest2) util.getQuest(player, 2)).setPart(3);
 					}
 				}
 			}

@@ -24,7 +24,7 @@ public class Quest1 implements Quest
 	 }
 	String name = "Starting out";
 	int questNum = 1;
-	int part = 0;
+	int part = 1;
 	Player player;
 	int skelKills;
 	File playerConfig;
@@ -33,7 +33,7 @@ public class Quest1 implements Quest
 	{	
 		this.plugin = plugin;
 		this.player = player;
-		if (section == 1)
+		if(section == 1)
 		{
 			part = 1;
 		}
@@ -41,21 +41,25 @@ public class Quest1 implements Quest
 		{
 			part = 2;
 		}
+		if (section == 3)
+		{
+			part = 3;
+		}
 		playerConfig = new File(plugin.getDataFolder()+"/user_data/" + player.getUniqueId()+".yml");
 		data = YamlConfiguration.loadConfiguration(playerConfig);
 	}
 	@Override
 	public String questInfo()
 	{
-		if(part == 0)
+		if(part == 1)
 		{
 			return "Talk to john the blacksmith about a job he needs done";
 		}
-		if(part == 1)
+		if(part == 2)
 		{
 			return "Kill " + (10-skelKills) + " skeletons to get bones for john the blacksmith";
 		}
-		if(part == 2)
+		if(part == 3)
 		{
 			return "Give the materials to john the blacksmith for a reward";
 		}
@@ -85,9 +89,7 @@ public class Quest1 implements Quest
 		player.updateInventory(); 
 		if(skelKills >=10)
 		{
-			data.set("CurrentQuests" +  ".Quest1", 2);
-			data.save(playerConfig);
-			part = 2;
+			part = 3;
 			player.sendMessage(ChatColor.GREEN + "Task Complete! ");
 			player.sendMessage(ChatColor.GREEN + "New Task: " + questInfo());
 			player.sendMessage(ChatColor.GREEN + "Since npc interactions dont work yet, type /quest turnin");

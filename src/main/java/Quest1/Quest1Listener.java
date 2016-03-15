@@ -38,7 +38,7 @@ public class Quest1Listener implements Listener
 			if(util.hasQuest(player, 1))// If player is on quest 1
 			{
 				Quest1 currentQuest = (Quest1) util.getQuest(player, 1);		//if player is on part 1 of quest 1	
-				if (currentQuest.getPart() == 1) 							
+				if (currentQuest.getPart() == 2) 							
 				{
 					if(event.getEntity().getType() == EntityType.SKELETON)
 					{	

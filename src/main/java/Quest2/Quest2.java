@@ -35,13 +35,13 @@ public class Quest2 implements Quest
 	{	
 		this.plugin = plugin;
 		this.player = player;
-		if (section == 1)
-		{
-			part = 1;
-		}
 		if (section == 2)
 		{
 			part = 2;
+		}
+		if (section == 3)
+		{
+			part = 3;
 		}
 		playerConfig = new File(plugin.getDataFolder()+"/user_data/" + player.getUniqueId()+".yml");
 		data = YamlConfiguration.loadConfiguration(playerConfig);		
@@ -49,15 +49,15 @@ public class Quest2 implements Quest
 	@Override
 	public String questInfo() 
 	{
-		if(part == 0)
+		if(part == 1)
 		{
 			return "head to the windmill outside of the castle to talk to tim";
 		}
-		if(part == 1)
+		if(part == 2)
 		{
 			return "search the area for clues to where tim went"; 
 		}
-		if(part ==2)
+		if(part ==3)
 		{
 			return "You have learned that tim was captured! Rescue time from the evildoers";
 		}
@@ -84,10 +84,5 @@ public class Quest2 implements Quest
 	public void setPart(int a)
 	{
 		part = a;
-	}
-	public void updateConfig(int a) throws IOException
-	{
-		data.set("CurrentQuests" +  ".Quest2", a);
-		data.save(playerConfig);
 	}
 }
