@@ -26,10 +26,11 @@ public class JoinListener implements Listener
 	@EventHandler
 	public void playerJoin(PlayerLoginEvent event)
 	{
-		double playerExp;
-		int playerLevel;
-		Player player = event.getPlayer();
-		String uuid = player.getUniqueId().toString();
+		final Player player = event.getPlayer();
+		final String uuid = player.getUniqueId().toString();
+	
+		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
+		public void run() {
 		try 
 		{
 			Connection myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
@@ -51,9 +52,8 @@ public class JoinListener implements Listener
 			}
 			else
 			{
-				playerLevel = rs.getInt("level");
-				playerExp = rs.getDouble("exp");
-				QuestPlayer joiningPlayer = new QuestPlayer(player, playerLevel, playerExp);
+
+				QuestPlayer joiningPlayer = new QuestPlayer(player, rs.getInt("level"),rs.getDouble("exp"));
 				plugin.questPlayers.add(joiningPlayer);
 			}
 			
@@ -85,13 +85,13 @@ public class JoinListener implements Listener
 			}
 			
 			//get skills
-			myConn.prepareStatement("SELECT * FROM player_quests WHERE uuid =?;");
+			myStatement = myConn.prepareStatement("SELECT * FROM nick_skills WHERE uuid =?;");
 			myStatement.setString(1, uuid);			
 			rs = myStatement.executeQuery();
 			if(rs.next() == false)
 			{
 				Bukkit.getLogger().info("Player does not exist in DB nick_skills!");
-				PreparedStatement preparedStmt = myConn.prepareStatement("INSERT INTO nick_skills " + "VALUES (?,0,0,0,0");
+				PreparedStatement preparedStmt = myConn.prepareStatement("INSERT INTO nick_skills " + "VALUES (?,0,0,0,0)");
 				preparedStmt.setString(1, uuid);
 				preparedStmt.execute();
 				Bukkit.getLogger().info("Player added to DB!");
@@ -114,6 +114,10 @@ public class JoinListener implements Listener
 		{
 			e.printStackTrace();
 		}
+		
+		}});
+		
+	
 	}
 	public void addQuest(int questNum, int part, Player player)
 	{

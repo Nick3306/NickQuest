@@ -29,18 +29,21 @@ public class LeaveListener implements Listener
 	   this.util = this.plugin.util;
 	 }
 	@EventHandler
-	public void playerExit(PlayerQuitEvent event)
+	public void playerExit(final PlayerQuitEvent event)
 	{
-		Player player = event.getPlayer();
-		String uuid = player.getUniqueId().toString();
-		QuestPlayer questPlayer = util.getQuestPlayer(player);
-		HashMap<Integer,Integer> questParts = new HashMap<Integer,Integer>();
-		String query = "UPDATE player_quests SET ";
-		
+		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
+			public void run() {
+				Player player = event.getPlayer();
+				String uuid = player.getUniqueId().toString();
+				String query = "UPDATE player_quests SET ";
+				QuestPlayer questPlayer = util.getQuestPlayer(player);
+				HashMap<Integer,Integer> questParts = new HashMap<Integer,Integer>();
+				
 		try 
 		{
 			Connection myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
 			Bukkit.getLogger().info("Sucessfully connected");
+			
 			//get and send quests
 			for(int i = 0 ; i < questPlayer.currentQuests.size(); i++)
 			{
@@ -56,7 +59,14 @@ public class LeaveListener implements Listener
 			}
 			for(int i = 0 ; i < questPlayer.completedQuests.size(); i++)
 			{
-				query = query + "Quest" + Integer.toString(questPlayer.completedQuests.get(i).getQuestNum())+ "=?,";
+				if(i == 0)
+				{
+				query = query + "Quest" + Integer.toString(questPlayer.completedQuests.get(i).getQuestNum())+ "=?";
+				}
+				else
+				{
+					query = query + ",Quest" + Integer.toString(questPlayer.completedQuests.get(i).getQuestNum())+ "=?";
+				}
 				questParts.put(questPlayer.completedQuests.get(i).getQuestNum(), 999);
 			}
 			query = query+" WHERE uuid =?;";
@@ -70,7 +80,14 @@ public class LeaveListener implements Listener
 				myStatement.setString(i+1, Integer.toString(questParts.get((Integer) keysArr[i])));
 				uuidCounter = i;
 			}
-			myStatement.setString(uuidCounter+2, uuid);
+			if(keysArr.length == 0)
+			{
+				myStatement.setString(1, uuid);
+			}
+			else
+			{
+				myStatement.setString(uuidCounter+2, uuid);
+			}
 			myStatement.execute();
 			
 			//get and send stats
@@ -83,15 +100,17 @@ public class LeaveListener implements Listener
 			//get and send skills
 			myStatement = myConn.prepareStatement("UPDATE nick_skills SET mining=?,archery=?,sword=?,magic=? WHERE uuid=?;");
 			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("mining")));
-			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("archery")));
-			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("sword")));
-			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("magic")));
+			myStatement.setString(2,Double.toString(questPlayer.skillsExp.get("archery")));
+			myStatement.setString(3,Double.toString(questPlayer.skillsExp.get("sword")));
+			myStatement.setString(4,Double.toString(questPlayer.skillsExp.get("magic")));
+			myStatement.setString(5, uuid);
 			myStatement.execute();
 		} 
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 		}
+			}});
 
 	}
 }

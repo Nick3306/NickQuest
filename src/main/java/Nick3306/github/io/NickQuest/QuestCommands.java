@@ -139,17 +139,15 @@ public class QuestCommands implements CommandExecutor
 				{
 					if(questPlayer.currentQuests.get(i).getQuestNum() == 1)
 					{
-						if(questPlayer.currentQuests.get(i).getPart() == 2)
+						if(questPlayer.currentQuests.get(i).getPart() == 3)
 						{
+							Quest completedQuest =  questPlayer.currentQuests.get(i);
 							player.getInventory().removeItem(new ItemStack[] { new ItemStack(Material.BONE, 10)});
 							player.updateInventory();
 							player.sendMessage(ChatColor.GREEN + "Quest Completed! 500 XP gained!");
+							questPlayer.completedQuests.add(completedQuest);
 							questPlayer.currentQuests.remove(i);
-							player.giveExp(500);
-							List<String> list = data.getStringList("CompletedQuests");
-							list.add("Quest1");
-							data.set("CompletedQuests", list);
-							data.getConfigurationSection("CurrentQuests").set("Quest1", null);
+							questPlayer.setExp(questPlayer.getExp() + 6);
 							try {
 								data.save(playerConfig);
 							} catch (IOException e) {

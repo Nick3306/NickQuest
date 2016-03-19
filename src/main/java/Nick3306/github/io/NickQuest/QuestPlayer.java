@@ -41,7 +41,7 @@ public class QuestPlayer
 	{
 		this.exp = exp;
 	}
-	public int getSkillLevel(String skill)
+	public double getSkillLevel(String skill)
 	{
 		return skills.get(skill);
 	}
