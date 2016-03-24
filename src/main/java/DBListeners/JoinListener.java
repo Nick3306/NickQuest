@@ -107,13 +107,14 @@ public class JoinListener implements Listener
 				joiningPlayer.skills.put("archery", Math.floor(rs.getDouble("archery")%1.5));
 				joiningPlayer.skills.put("sword", Math.floor(rs.getDouble("sword")%1.5));
 				joiningPlayer.skills.put("magic", Math.floor(rs.getDouble("magic")%1.5));
-			}
+			}	
 			myConn.close();
 		} 
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
 		}
+
 		
 		}});
 		

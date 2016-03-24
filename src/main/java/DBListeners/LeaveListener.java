@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -33,6 +34,7 @@ public class LeaveListener implements Listener
 	{
 		Bukkit.getScheduler().runTaskAsynchronously(this.plugin, new Runnable() {
 			public void run() {
+				Connection myConn = null;
 				Player player = event.getPlayer();
 				String uuid = player.getUniqueId().toString();
 				String query = "UPDATE player_quests SET ";
@@ -41,7 +43,7 @@ public class LeaveListener implements Listener
 				
 		try 
 		{
-			Connection myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
+			myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
 			Bukkit.getLogger().info("Sucessfully connected");
 			
 			//get and send quests
@@ -105,11 +107,13 @@ public class LeaveListener implements Listener
 			myStatement.setString(4,Double.toString(questPlayer.skillsExp.get("magic")));
 			myStatement.setString(5, uuid);
 			myStatement.execute();
+			myConn.close();
 		} 
 		catch (SQLException e) 
 		{
-			e.printStackTrace();
+
 		}
+
 			}});
 
 	}
