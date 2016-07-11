@@ -101,10 +101,10 @@ public class LeaveListener implements Listener
 			
 			//get and send skills
 			myStatement = myConn.prepareStatement("UPDATE nick_skills SET mining=?,archery=?,sword=?,magic=? WHERE uuid=?;");
-			myStatement.setString(1,Double.toString(questPlayer.skillsExp.get("mining")));
-			myStatement.setString(2,Double.toString(questPlayer.skillsExp.get("archery")));
-			myStatement.setString(3,Double.toString(questPlayer.skillsExp.get("sword")));
-			myStatement.setString(4,Double.toString(questPlayer.skillsExp.get("magic")));
+			myStatement.setString(1,Double.toString(questPlayer.skills.get("mining")));
+			myStatement.setString(2,Double.toString(questPlayer.skills.get("archery")));
+			myStatement.setString(3,Double.toString(questPlayer.skills.get("sword")));
+			myStatement.setString(4,Double.toString(questPlayer.skills.get("magic")));
 			myStatement.setString(5, uuid);
 			myStatement.execute();
 			myConn.close();

@@ -98,15 +98,11 @@ public class JoinListener implements Listener
 			}
 			else
 			{
-				QuestPlayer joiningPlayer = util.getQuestPlayer(player);
-				joiningPlayer.skillsExp.put("mining", rs.getDouble("mining"));
-				joiningPlayer.skillsExp.put("archery", rs.getDouble("archery"));
-				joiningPlayer.skillsExp.put("sword", rs.getDouble("sword"));
-				joiningPlayer.skillsExp.put("magic", rs.getDouble("magic"));
-				joiningPlayer.skills.put("mining", Math.floor(rs.getDouble("mining")%1.5));
-				joiningPlayer.skills.put("archery", Math.floor(rs.getDouble("archery")%1.5));
-				joiningPlayer.skills.put("sword", Math.floor(rs.getDouble("sword")%1.5));
-				joiningPlayer.skills.put("magic", Math.floor(rs.getDouble("magic")%1.5));
+				QuestPlayer joiningPlayer = util.getQuestPlayer(player);		
+				joiningPlayer.skills.put("mining", Math.floor(rs.getDouble("mining")));
+				joiningPlayer.skills.put("archery", Math.floor(rs.getDouble("archery")));
+				joiningPlayer.skills.put("sword", Math.floor(rs.getDouble("sword")));
+				joiningPlayer.skills.put("magic", Math.floor(rs.getDouble("magic")));
 			}	
 			myConn.close();
 		} 

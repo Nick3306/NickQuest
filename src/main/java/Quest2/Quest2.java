@@ -59,7 +59,7 @@ public class Quest2 implements Quest
 		}
 		if(part ==3)
 		{
-			return "You have learned that tim was captured! Rescue time from the evildoers";
+			return "You have learned that tim was captured! Rescue tim from the evildoers in the cave North of the windmill";
 		}
 		return " ";
 	}

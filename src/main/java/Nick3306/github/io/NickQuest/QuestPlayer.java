@@ -12,9 +12,11 @@ public class QuestPlayer
 	public ArrayList<Quest> currentQuests = new ArrayList<Quest>();
 	public ArrayList<Quest> completedQuests = new ArrayList<Quest>();
 	public HashMap<String, Double> skills = new HashMap<String, Double>();
-	public HashMap<String, Double> skillsExp = new HashMap<String, Double>();
 	private int level;
 	private double exp;
+	private double damage;
+	private double defense;
+	private double health;
 	public QuestPlayer(Player player, int level, double exp)
 	{
 		this.player = player;
@@ -44,13 +46,5 @@ public class QuestPlayer
 	public double getSkillLevel(String skill)
 	{
 		return skills.get(skill);
-	}
-	public double getSkillExp(String skill)
-	{
-		return skillsExp.get(skill);
-	}
-	public void setSkillExp(String skill, double exp)
-	{
-		skillsExp.put(skill, exp);
 	}
 }
