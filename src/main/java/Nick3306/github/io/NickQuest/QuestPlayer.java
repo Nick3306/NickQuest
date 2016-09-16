@@ -6,12 +6,14 @@ import java.lang.*;
 
 import org.bukkit.entity.Player;
 
+import Skills.Skill;
+
 public class QuestPlayer 
 {
 	private Player player;
 	public ArrayList<Quest> currentQuests = new ArrayList<Quest>();
 	public ArrayList<Quest> completedQuests = new ArrayList<Quest>();
-	public HashMap<String, Double> skills = new HashMap<String, Double>();
+	public ArrayList<Skill> skills = new ArrayList<Skill>();
 	private int level;
 	private double exp;
 	private double damage;
@@ -43,8 +45,26 @@ public class QuestPlayer
 	{
 		this.exp = exp;
 	}
-	public double getSkillLevel(String skill)
+	public double getSkillLevel(String skillName)
 	{
-		return skills.get(skill);
+		for(Skill skill:skills)
+		{
+			if(skill.getName().equalsIgnoreCase(skillName))
+			{
+				return skill.getLevel();
+			}
+		}
+		return 0;
+	}
+	public Skill getSkill(String skillName)
+	{
+		for(Skill skill:skills)
+		{
+			if(skill.getName().equalsIgnoreCase(skillName))
+			{
+				return skill;
+			}
+		}
+		return null;
 	}
 }

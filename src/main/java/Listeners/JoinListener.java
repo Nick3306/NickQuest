@@ -1,4 +1,4 @@
-package DBListeners;
+package Listeners;
 
 import java.sql.*;
 
@@ -11,8 +11,13 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import Nick3306.github.io.NickQuest.Main;
 import Nick3306.github.io.NickQuest.QuestPlayer;
 import Nick3306.github.io.NickQuest.Utilities;
-import Quest1.Quest1;
-import Quest2.Quest2;
+import Skills.ArcherySkill;
+import Skills.ArmorSkill;
+import Skills.HealthSkill;
+import Skills.MagicSkill;
+import Skills.MeleeSkill;
+import Skills.MiningSkill;
+
 //This listener gets the player that joins and grabs what quest they are on from the config.
 public class JoinListener implements Listener
 {
@@ -26,6 +31,13 @@ public class JoinListener implements Listener
 	@EventHandler
 	public void playerJoin(PlayerLoginEvent event)
 	{
+		/*
+		 * 
+		 * 
+		 The following is used to grab stuff from the DB when a player joins
+		 *
+		 *
+		 */
 		final Player player = event.getPlayer();
 		final String uuid = player.getUniqueId().toString();
 	
@@ -33,10 +45,16 @@ public class JoinListener implements Listener
 		public void run() {
 		try 
 		{
-			Connection myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
+			Connection myConn = DriverManager.getConnection("jdbc:mysql://158.69.55.217:3306/mc30874","mc30874","a52df14135");
 			Bukkit.getLogger().info("Sucessfully connected on login");
 			
-			//get stats
+			/*
+			 * 
+			 * 
+			 Get stats from the DB
+			 *
+			 *
+			 */
 			PreparedStatement myStatement = myConn.prepareStatement("SELECT * FROM nick_stats WHERE uuid =?;");
 			myStatement.setString(1, uuid);			
 			ResultSet rs = myStatement.executeQuery();
@@ -57,10 +75,17 @@ public class JoinListener implements Listener
 				plugin.questPlayers.add(joiningPlayer);
 			}
 			
-			// get quest data
+			/*
+			 * 
+			 * 
+			 Get quest data from DB
+			 *
+			 *
+			 */
 			myStatement = myConn.prepareStatement("SELECT * FROM player_quests WHERE uuid =?;");
 			myStatement.setString(1, uuid);			
 			rs = myStatement.executeQuery();
+			//If player doesn't exist add them to the DB
 			if(rs.next() == false)
 			{
 				Bukkit.getLogger().info("Player does not exist in DB");
@@ -84,25 +109,48 @@ public class JoinListener implements Listener
 				}
 			}
 			
-			//get skills
+			/*
+			 * 
+			 * 
+			 Gets skills from DB
+			 *
+			 *
+			 */
 			myStatement = myConn.prepareStatement("SELECT * FROM nick_skills WHERE uuid =?;");
 			myStatement.setString(1, uuid);			
 			rs = myStatement.executeQuery();
 			if(rs.next() == false)
 			{
 				Bukkit.getLogger().info("Player does not exist in DB nick_skills!");
-				PreparedStatement preparedStmt = myConn.prepareStatement("INSERT INTO nick_skills " + "VALUES (?,0,0,0,0)");
+				PreparedStatement preparedStmt = myConn.prepareStatement("INSERT INTO nick_skills " + "VALUES (?,0,0,0,0,0,0,0,0,0)");
 				preparedStmt.setString(1, uuid);
 				preparedStmt.execute();
 				Bukkit.getLogger().info("Player added to DB!");
 			}
 			else
 			{
+				boolean frost = false;
+				boolean fire = false;
+				boolean poison = false;
+				if(rs.getDouble("archery_frost") == 1)
+				{
+					frost = true;
+				}
+				if(rs.getDouble("archery_fire") == 1)
+				{
+					fire = true;
+				}
+				if(rs.getDouble("archery_poison") == 1)
+				{
+					poison = true;
+				}
 				QuestPlayer joiningPlayer = util.getQuestPlayer(player);		
-				joiningPlayer.skills.put("mining", Math.floor(rs.getDouble("mining")));
-				joiningPlayer.skills.put("archery", Math.floor(rs.getDouble("archery")));
-				joiningPlayer.skills.put("sword", Math.floor(rs.getDouble("sword")));
-				joiningPlayer.skills.put("magic", Math.floor(rs.getDouble("magic")));
+				joiningPlayer.skills.add(new ArcherySkill("archery",(rs.getInt("archery")),frost, fire, poison));
+				joiningPlayer.skills.add(new MeleeSkill("Melee", (rs.getInt("melee"))));
+				joiningPlayer.skills.add(new MagicSkill("Magic", (rs.getInt("magic"))));
+				joiningPlayer.skills.add(new HealthSkill("Health", (rs.getInt("health"))));
+				joiningPlayer.skills.add(new ArmorSkill("Armor", (rs.getInt("armor"))));
+				joiningPlayer.skills.add(new MiningSkill("Mining", (rs.getInt("mining"))));
 			}	
 			myConn.close();
 		} 
@@ -113,11 +161,18 @@ public class JoinListener implements Listener
 
 		
 		}});
-		
+		/*
+		 * 
+		 * 
+		 The following is used to grab stuff from the DB when a player joins
+		 *
+		 *
+		 */
 	
 	}
 	public void addQuest(int questNum, int part, Player player)
 	{
+		/*
 		QuestPlayer joiningPlayer = util.getQuestPlayer(player);
 		if(questNum == 1)
 		{
@@ -148,5 +203,6 @@ public class JoinListener implements Listener
 				Bukkit.getLogger().info("quest 2 added");
 			}
 		}
+		*/
 	}
 }

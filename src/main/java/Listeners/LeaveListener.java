@@ -1,4 +1,4 @@
-package DBListeners;
+package Listeners;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import Nick3306.github.io.NickQuest.Main;
 import Nick3306.github.io.NickQuest.QuestPlayer;
 import Nick3306.github.io.NickQuest.Utilities;
+import Skills.ArcherySkill;
 
 public class LeaveListener implements Listener
 {
@@ -43,10 +44,16 @@ public class LeaveListener implements Listener
 				
 		try 
 		{
-			myConn = DriverManager.getConnection("jdbc:mysql://172.245.215.194:3306/mc22128","mc22128","d203b0cf75");
+			myConn = DriverManager.getConnection("jdbc:mysql://158.69.55.217:3306/mc30874","mc30874","a52df14135");
 			Bukkit.getLogger().info("Sucessfully connected");
 			
-			//get and send quests
+			/*
+			 * 
+			 * 
+			 Save quests to DB
+			 *
+			 *
+			 */
 			for(int i = 0 ; i < questPlayer.currentQuests.size(); i++)
 			{
 				if(i == 0)
@@ -92,20 +99,36 @@ public class LeaveListener implements Listener
 			}
 			myStatement.execute();
 			
-			//get and send stats
+			/*
+			 * 
+			 * 
+			 Save stats to DB
+			 *
+			 *
+			 */
 			myStatement = myConn.prepareStatement("UPDATE nick_stats SET level=?,exp=? WHERE uuid=?");
 			myStatement.setString(1, Integer.toString(questPlayer.getLevel()));
 			myStatement.setString(2, Double.toString(questPlayer.getExp()));
 			myStatement.setString(3, uuid);
 			myStatement.execute();
 			
-			//get and send skills
-			myStatement = myConn.prepareStatement("UPDATE nick_skills SET mining=?,archery=?,sword=?,magic=? WHERE uuid=?;");
-			myStatement.setString(1,Double.toString(questPlayer.skills.get("mining")));
-			myStatement.setString(2,Double.toString(questPlayer.skills.get("archery")));
-			myStatement.setString(3,Double.toString(questPlayer.skills.get("sword")));
-			myStatement.setString(4,Double.toString(questPlayer.skills.get("magic")));
-			myStatement.setString(5, uuid);
+			/*
+			 * 
+			 * 
+			 Save Skills to the DB
+			 *
+			 *
+			 */
+			myStatement = myConn.prepareStatement("UPDATE nick_skills SET mining=?,archery=?,melee=?,magic=?,archery_frost=?,archery_fire=?,archery_poison=? WHERE uuid=?;");
+			myStatement.setString(1,Double.toString(questPlayer.getSkillLevel("mining")));
+			myStatement.setString(2,Double.toString(questPlayer.getSkillLevel("archery")));
+			myStatement.setString(3,Double.toString(questPlayer.getSkillLevel("melee")));
+			myStatement.setString(4,Double.toString(questPlayer.getSkillLevel("magic")));
+			ArcherySkill arch = (ArcherySkill)questPlayer.getSkill("archery");
+			myStatement.setString(5,Boolean.toString(arch.hasFrost()));
+			myStatement.setString(6,Boolean.toString(arch.hasFire()));
+			myStatement.setString(7,Boolean.toString(arch.hasPoison()));
+			myStatement.setString(8, uuid);
 			myStatement.execute();
 			myConn.close();
 		} 

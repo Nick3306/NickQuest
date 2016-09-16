@@ -8,10 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import DBListeners.JoinListener;
-import DBListeners.LeaveListener;
-import Quest1.Quest1Listener;
-import Quest2.Quest2Listener;
+import Listeners.EntityDamageListener;
+import Listeners.EntityDeathListener;
+import Listeners.JoinListener;
+import Listeners.LeaveListener;
+;
 public class Main extends JavaPlugin
 {
 	// The value of this hashmap will be the unique quests a player is on. Setting type as object allows them all to be stored in the same map. 
@@ -24,10 +25,10 @@ public class Main extends JavaPlugin
 		this.getConfig().options().copyDefaults(true);
 		saveDefaultConfig();
 		util = new Utilities(this);
-		pm.registerEvents(new Quest1Listener(this), this);
+		pm.registerEvents(new EntityDeathListener(this), this);
 		pm.registerEvents(new JoinListener(this), this);
 		pm.registerEvents(new LeaveListener(this), this);
-		pm.registerEvents(new Quest2Listener(this), this);
+		pm.registerEvents(new EntityDamageListener(this),this);
 		getCommand("Quest").setExecutor(new QuestCommands(this));
 		
 	 }
